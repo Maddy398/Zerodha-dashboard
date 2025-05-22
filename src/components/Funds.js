@@ -4,11 +4,6 @@ import { Link } from "react-router-dom";
 const Funds = () => {
   return (
     <>
-      <div className="funds">
-        <p>Instant, zero-cost fund transfers with UPI </p>
-        <Link className="btn btn-green">Add funds</Link>
-        <Link className="btn btn-blue">Withdraw</Link>
-      </div>
 
       <div className="row">
         <div className="col">
@@ -71,13 +66,6 @@ const Funds = () => {
               <p>Total Collateral</p>
               <p>0.00</p>
             </div>
-          </div>
-        </div>
-
-        <div className="col">
-          <div className="commodity">
-            <p>You don't have a commodity account</p>
-            <Link className="btn btn-blue">Open Account</Link>
           </div>
         </div>
       </div>
