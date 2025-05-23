@@ -16,7 +16,7 @@ const Orders = () => {
       .filter((order) => order.mode === type)
       .map((order, index) => (
         <li key={index}>
-          {type} {order.qty} @ ₹{order.price} - {new Date(order.timestamp).toLocaleString()}
+          {type} {order.qty} @ ₹{order.price} 
         </li>
       ));
 
