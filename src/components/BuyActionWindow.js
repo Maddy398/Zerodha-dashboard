@@ -75,3 +75,4 @@ const BuyActionWindow = ({ uid }) => {
     </div>
   );
 };
+export default BuyActionWindow.js;
