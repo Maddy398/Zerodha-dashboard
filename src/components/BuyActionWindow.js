@@ -73,16 +73,6 @@ const BuyActionWindow = ({ uid }) => {
           </Link>
         </div>
       </div>
-
-      <div className="order-history">
-        <ul>
-          {orderHistory.map((order, idx) => (
-            <li key={idx}>
-              {order.mode} {order.qty} @ ₹{order.price} ({order.timestamp})
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
   );
 };
