@@ -1,54 +1,40 @@
 import React, { useState } from "react";
 
-import BuyActionWindow from "./BuyActionWindow";
-import SellActionWindow from "./SellActionWindow";
+import TradeActionWindow from "./TradeActionWindow"; // renamed from BuyActionWindow + SellActionWindow
 
 const GeneralContext = React.createContext({
-  openBuyWindow: (uid) => {},
-  closeBuyWindow: () => {},
-  openSellWindow: (uid) => {},
-  closeSellWindow: () => {},
+  openTradeWindow: (uid, mode) => {},
+  closeTradeWindow: () => {},
 });
 
 export const GeneralContextProvider = (props) => {
-  const [isBuyWindowOpen, setIsBuyWindowOpen] = useState(false);
-  const [isSellWindowOpen, setIsSellWindowOpen] = useState(false);
+  const [isTradeWindowOpen, setIsTradeWindowOpen] = useState(false);
   const [selectedStockUID, setSelectedStockUID] = useState("");
+  const [tradeMode, setTradeMode] = useState("BUY"); // "BUY" or "SELL"
 
-  // Buy Window Handlers
-  const handleOpenBuyWindow = (uid) => {
+  // Open trade window with mode
+  const handleOpenTradeWindow = (uid, mode = "BUY") => {
     setSelectedStockUID(uid);
-    setIsBuyWindowOpen(true);
+    setTradeMode(mode);
+    setIsTradeWindowOpen(true);
   };
 
-  const handleCloseBuyWindow = () => {
-    setIsBuyWindowOpen(false);
-    setSelectedStockUID("");
-  };
-
-  // Sell Window Handlers
-  const handleOpenSellWindow = (uid) => {
-    setSelectedStockUID(uid);
-    setIsSellWindowOpen(true);
-  };
-
-  const handleCloseSellWindow = () => {
-    setIsSellWindowOpen(false);
+  const handleCloseTradeWindow = () => {
+    setIsTradeWindowOpen(false);
     setSelectedStockUID("");
   };
 
   return (
     <GeneralContext.Provider
       value={{
-        openBuyWindow: handleOpenBuyWindow,
-        closeBuyWindow: handleCloseBuyWindow,
-        openSellWindow: handleOpenSellWindow,
-        closeSellWindow: handleCloseSellWindow,
+        openTradeWindow: handleOpenTradeWindow,
+        closeTradeWindow: handleCloseTradeWindow,
       }}
     >
       {props.children}
-      {isBuyWindowOpen && <BuyActionWindow uid={selectedStockUID} />}
-      {isSellWindowOpen && <SellActionWindow uid={selectedStockUID} />}
+      {isTradeWindowOpen && (
+        <TradeActionWindow uid={selectedStockUID} mode={tradeMode} />
+      )}
     </GeneralContext.Provider>
   );
 };
