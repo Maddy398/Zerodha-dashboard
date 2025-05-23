@@ -1,4 +1,3 @@
-// DoughnutChart.js
 import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -8,9 +7,26 @@ import {
   Title,
 } from "chart.js";
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title, ChartDataLabels);
+ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 export const DoughnutChart = ({ data }) => {
+  const vibrantColors = [
+    "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40",
+    "#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#2ecc71",
+  ];
+
+  // Enhance data object with consistent colors if not already set
+  const enhancedData = {
+    ...data,
+    datasets: data.datasets.map((dataset) => ({
+      ...dataset,
+      backgroundColor: vibrantColors.slice(0, dataset.data.length),
+      borderColor: "#fff",
+      borderWidth: 2,
+      hoverOffset: 12,
+    })),
+  };
+
   const options = {
     responsive: true,
     plugins: {
@@ -27,37 +43,31 @@ export const DoughnutChart = ({ data }) => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem) {
-            return `${tooltipItem.label}: ₹${tooltipItem.raw.toFixed(2)}`;
+            const label = tooltipItem.label || "";
+            const value = tooltipItem.raw || 0;
+            return `${label}: ₹${value.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`;
           },
-        },
-      },
-      datalabels: {
-        color: "#fff",
-        font: {
-          weight: "bold",
-          size: 12,
-        },
-        formatter: (value, ctx) => {
-          let sum = ctx.chart._metasets[0].total;
-          let percentage = ((value / sum) * 100).toFixed(1) + "%";
-          return percentage;
         },
       },
       title: {
         display: true,
         text: "Watchlist Stock Prices",
         font: {
-          size: 18,
+          size: 20,
         },
         color: "#222",
         padding: {
           top: 10,
-          bottom: 30,
+          bottom: 20,
         },
       },
     },
-    cutout: "65%", // for nice donut appearance
+    cutout: "65%", // doughnut center size
   };
 
-  return <Doughnut data={data} options={options} />;
+  return <Doughnut data={enhancedData} options={options} />;
 };
+
