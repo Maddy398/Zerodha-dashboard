@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import TradeActionWindow from "./TradeActionWindow"; // renamed from BuyActionWindow + SellActionWindow
+import BuyActionWindow from "./BuyActionWindow"; // renamed back from TradeActionWindow
 
 const GeneralContext = React.createContext({
   openTradeWindow: (uid, mode) => {},
@@ -33,7 +33,7 @@ export const GeneralContextProvider = (props) => {
     >
       {props.children}
       {isTradeWindowOpen && (
-        <TradeActionWindow uid={selectedStockUID} mode={tradeMode} />
+        <BuyActionWindow uid={selectedStockUID} mode={tradeMode} />
       )}
     </GeneralContext.Provider>
   );
