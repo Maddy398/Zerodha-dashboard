@@ -146,7 +146,7 @@ const Summary = () => {
         <div className="data">
           <div className="first">
             <h3 className={summary.pl >= 0 ? "profit" : "loss"}>
-              {(Math.abs(summary.pl) / 1000).toFixed(2)}k{" "}
+              {(Math.abs(summary.pl)).toFixed(2)}k{" "}
               <small>
                 {summary.pl >= 0 ? "+" : "-"}
                 {Math.abs(summary.plPercent).toFixed(2)}%
