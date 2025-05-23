@@ -3,9 +3,9 @@ import React from "react";
 const Funds = () => {
   // In a real app, these values would come from props, context, or an API
   const summary = {
-    availableMargin: 4043.10,
-    usedMargin: 3757.30,
-    availableCash: 4043.10,
+    availableMargin: 4043,
+    usedMargin: 3757,
+    availableCash: 4043,
   };
 
   const breakdown = [
@@ -36,15 +36,15 @@ const Funds = () => {
                 <h5 className="mb-3">Margin Summary</h5>
                 <div className="mb-3">
                   <p className="mb-1 text-muted">Available Margin</p>
-                  <h4 className="text-success">₹ {summary.availableMargin.toFixed(2)}</h4>
+                  <h4 className="text-success">₹ {summary.availableMargin}</h4>
                 </div>
                 <div className="mb-3">
                   <p className="mb-1 text-muted">Used Margin</p>
-                  <h4 className="text-danger">₹ {summary.usedMargin.toFixed(2)}</h4>
+                  <h4 className="text-danger">₹ {summary.usedMargin}</h4>
                 </div>
                 <div className="mb-3">
                   <p className="mb-1 text-muted">Available Cash</p>
-                  <h4 className="text-success">₹ {summary.availableCash.toFixed(2)}</h4>
+                  <h4 className="text-success">₹ {summary.availableCash}</h4>
                 </div>
               </div>
             </div>
@@ -59,12 +59,12 @@ const Funds = () => {
                         {item.isHeader ? (
                           <>
                             <th className="pt-4">{item.label}</th>
-                            <th className="pt-4">₹ {item.value.toFixed(2)}</th>
+                            <th className="pt-4">₹{item.value}</th>
                           </>
                         ) : (
                           <>
                             <td>{item.label}</td>
-                            <td>₹ {item.value.toFixed(2)}</td>
+                            <td>₹{item.value}</td>
                           </>
                         )}
                       </tr>
