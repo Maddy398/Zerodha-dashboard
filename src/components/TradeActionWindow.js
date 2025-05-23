@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./BuyActionWindow.css"; // Reuse your styles
+import { Link } from "react-router-dom";
 
-const TradeActionWindow = ({ uid, mode: initialMode, onClose }) => {
-  const [mode, setMode] = useState(initialMode || "BUY"); // "BUY" or "SELL"
+import GeneralContext from "./GeneralContext";
+import "./BuyActionWindow.css";
+
+const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
-  const [stockPrice, setStockPrice] = useState(0);
+  const [stockPrice, setStockPrice] = useState(0.0);
   const [orderHistory, setOrderHistory] = useState([]);
 
   useEffect(() => {
@@ -12,83 +14,64 @@ const TradeActionWindow = ({ uid, mode: initialMode, onClose }) => {
     setOrderHistory(storedOrders);
   }, []);
 
-  const handleTradeClick = () => {
-    if (stockQuantity <= 0 || stockPrice <= 0) {
-      alert("Please enter valid quantity and price.");
-      return;
-    }
-
+  const handleBuyClick = () => {
     const newOrder = {
       name: uid,
       qty: Number(stockQuantity),
       price: Number(stockPrice),
-      mode, // BUY or SELL
-      timestamp: new Date().toISOString(),
+      mode: "BUY",
     };
 
     const updatedOrders = [...orderHistory, newOrder];
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
     setOrderHistory(updatedOrders);
 
-    onClose();
+    GeneralContext.closeBuyWindow();
   };
 
   const handleCancelClick = () => {
-    onClose();
+    GeneralContext.closeBuyWindow();
   };
 
   return (
-    <div className="container" id="trade-window" draggable="true">
-      {/* Toggle Buy / Sell */}
-      <div className="trade-mode-toggle" style={{ marginBottom: 10 }}>
-        <button className={mode === "BUY" ? "active" : ""} onClick={() => setMode("BUY")}>
-          Buy
-        </button>
-        <button className={mode === "SELL" ? "active" : ""} onClick={() => setMode("SELL")}>
-          Sell
-        </button>
-      </div>
-
+    <div className="container" id="buy-window" draggable="true">
       <div className="regular-order">
         <div className="inputs">
           <fieldset>
             <legend>Qty.</legend>
             <input
               type="number"
-              min="1"
-              value={stockQuantity}
+              name="qty"
+              id="qty"
               onChange={(e) => setStockQuantity(e.target.value)}
+              value={stockQuantity}
             />
           </fieldset>
           <fieldset>
             <legend>Price</legend>
             <input
               type="number"
-              min="0"
+              name="price"
+              id="price"
               step="0.05"
-              value={stockPrice}
               onChange={(e) => setStockPrice(e.target.value)}
+              value={stockPrice}
             />
           </fieldset>
         </div>
       </div>
 
       <div className="buttons">
-        <span>
-          Margin {mode === "BUY" ? "required" : "released"} ₹
-          {(stockQuantity * stockPrice).toFixed(2)}
-        </span>
+        <span>Margin required ₹{(stockQuantity * stockPrice).toFixed(2)}</span>
         <div>
-          <button className="btn btn-blue" onClick={handleTradeClick}>
-            {mode}
-          </button>
-          <button className="btn btn-grey" onClick={handleCancelClick}>
+          <Link className="btn btn-blue" onClick={handleBuyClick}>
+            BUY
+          </Link>
+          <Link to="" className="btn btn-grey" onClick={handleCancelClick}>
             Cancel
-          </button>
+          </Link>
         </div>
       </div>
     </div>
   );
 };
-
-export default TradeActionWindow;
