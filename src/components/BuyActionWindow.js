@@ -99,4 +99,4 @@ const TradeActionWindow = ({ uid }) => {
   );
 };
 
-export default BuyActionWindow;
+export default TradeActionWindow;
