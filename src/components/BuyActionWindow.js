@@ -75,7 +75,6 @@ const BuyActionWindow = ({ uid }) => {
       </div>
 
       <div className="order-history">
-        <h4>Order History</h4>
         <ul>
           {orderHistory.map((order, idx) => (
             <li key={idx}>
