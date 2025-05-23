@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import GeneralContext from "./GeneralContext";
 import "./BuyActionWindow.css";
 
-const BuyActionWindow = ({ uid }) => {
+const TradeActionWindow = ({ uid }) => {
+  const [mode, setMode] = useState("BUY"); // "BUY" or "SELL"
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
   const [orderHistory, setOrderHistory] = useState([]);
@@ -14,12 +15,12 @@ const BuyActionWindow = ({ uid }) => {
     setOrderHistory(storedOrders);
   }, []);
 
-  const handleBuyClick = () => {
+  const handleTradeClick = () => {
     const newOrder = {
       name: uid,
       qty: Number(stockQuantity),
       price: Number(stockPrice),
-      mode: "BUY",
+      mode: mode, // BUY or SELL
       timestamp: new Date().toISOString(),
     };
 
@@ -36,6 +37,22 @@ const BuyActionWindow = ({ uid }) => {
 
   return (
     <div className="container" id="buy-window" draggable="true">
+      {/* Toggle between Buy and Sell */}
+      <div className="trade-mode-toggle" style={{ marginBottom: "10px" }}>
+        <button
+          className={mode === "BUY" ? "active" : ""}
+          onClick={() => setMode("BUY")}
+        >
+          Buy
+        </button>
+        <button
+          className={mode === "SELL" ? "active" : ""}
+          onClick={() => setMode("SELL")}
+        >
+          Sell
+        </button>
+      </div>
+
       <div className="regular-order">
         <div className="inputs">
           <fieldset>
@@ -44,6 +61,7 @@ const BuyActionWindow = ({ uid }) => {
               type="number"
               name="qty"
               id="qty"
+              min="1"
               onChange={(e) => setStockQuantity(e.target.value)}
               value={stockQuantity}
             />
@@ -55,6 +73,7 @@ const BuyActionWindow = ({ uid }) => {
               name="price"
               id="price"
               step="0.05"
+              min="0"
               onChange={(e) => setStockPrice(e.target.value)}
               value={stockPrice}
             />
@@ -63,10 +82,13 @@ const BuyActionWindow = ({ uid }) => {
       </div>
 
       <div className="buttons">
-        <span>Margin required ₹{(stockQuantity * stockPrice).toFixed(2)}</span>
+        <span>
+          Margin {mode === "BUY" ? "required" : "released"} ₹
+          {(stockQuantity * stockPrice).toFixed(2)}
+        </span>
         <div>
-          <Link className="btn btn-blue" onClick={handleBuyClick}>
-            Buy
+          <Link className="btn btn-blue" onClick={handleTradeClick}>
+            {mode}
           </Link>
           <Link to="" className="btn btn-grey" onClick={handleCancelClick}>
             Cancel
