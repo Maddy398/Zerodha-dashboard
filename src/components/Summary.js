@@ -158,10 +158,10 @@ const Summary = () => {
 
           <div className="second">
             <p>
-              Current Value <span>{(summary.currentValue / 1000).toFixed(2)}k</span>
+              Current Value <span>{(summary.currentValue).toFixed(2)}k</span>
             </p>
             <p>
-              Investment <span>{(summary.investment / 1000).toFixed(2)}k</span>
+              Investment <span>{(summary.investment).toFixed(2)}k</span>
             </p>
           </div>
         </div>
