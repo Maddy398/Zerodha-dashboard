@@ -16,7 +16,7 @@ const Orders = () => {
       .filter((order) => order.mode === type)
       .map((order, index) => (
         <li key={index}>
-          {type} {order.qty} @ ₹{order.price} 
+          {type} {order.name} @ ₹{order.price} 
         </li>
       ));
 
