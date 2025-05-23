@@ -1,6 +1,26 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
 const Funds = () => {
+  // In a real app, these values would come from props, context, or an API
+  const summary = {
+    availableMargin: 4043.10,
+    usedMargin: 3757.30,
+    availableCash: 4043.10,
+  };
+
+  const breakdown = [
+    { label: "Opening Balance", value: 4043.10 },
+    { label: "Opening Balance (F&O)", value: 3736.40 },
+    { label: "Payin", value: 4064.00 },
+    { label: "SPAN", value: 0.00 },
+    { label: "Delivery Margin", value: 0.00 },
+    { label: "Exposure", value: 0.00 },
+    { label: "Options Premium", value: 0.00 },
+    { label: "Collateral (Liquid funds)", value: 0.00, isHeader: true },
+    { label: "Collateral (Equity)", value: 0.00 },
+    { label: "Total Collateral", value: 0.00 },
+  ];
+
   return (
     <div
       className="container-fluid bg-light d-flex align-items-center justify-content-center"
@@ -13,69 +33,42 @@ const Funds = () => {
             {/* Left Column: Summary */}
             <div className="col-lg-4 mb-4">
               <div className="bg-white p-4 rounded shadow-sm h-100 d-flex flex-column justify-content-between">
-                <div>
-                  <h5 className="mb-3">Summary</h5>
-                  <div className="mb-3">
-                    <p className="mb-1 text-muted">Available Margin</p>
-                    <h4 className="text-success">₹ 4,043.10</h4>
-                  </div>
-                  <div className="mb-3">
-                    <p className="mb-1 text-muted">Used Margin</p>
-                    <h4 className="text-danger">₹ 3,757.30</h4>
-                  </div>
-                  <div className="mb-3">
-                    <p className="mb-1 text-muted">Available Cash</p>
-                    <h4 className="text-success">₹ 4,043.10</h4>
-                  </div>
+                <h5 className="mb-3">Margin Summary</h5>
+                <div className="mb-3">
+                  <p className="mb-1 text-muted">Available Margin</p>
+                  <h4 className="text-success">₹ {summary.availableMargin.toFixed(2)}</h4>
+                </div>
+                <div className="mb-3">
+                  <p className="mb-1 text-muted">Used Margin</p>
+                  <h4 className="text-danger">₹ {summary.usedMargin.toFixed(2)}</h4>
+                </div>
+                <div className="mb-3">
+                  <p className="mb-1 text-muted">Available Cash</p>
+                  <h4 className="text-success">₹ {summary.availableCash.toFixed(2)}</h4>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Detailed Table */}
+            {/* Right Column: Table */}
             <div className="col-lg-8">
               <div className="table-responsive bg-white rounded shadow-sm">
                 <table className="table mb-0">
                   <tbody>
-                    <tr>
-                      <td>Opening Balance</td>
-                      <td>₹ 4,043.10</td>
-                    </tr>
-                    <tr>
-                      <td>Opening Balance (F&O)</td>
-                      <td>₹ 3,736.40</td>
-                    </tr>
-                    <tr>
-                      <td>Payin</td>
-                      <td>₹ 4,064.00</td>
-                    </tr>
-                    <tr>
-                      <td>SPAN</td>
-                      <td>₹ 0.00</td>
-                    </tr>
-                    <tr>
-                      <td>Delivery Margin</td>
-                      <td>₹ 0.00</td>
-                    </tr>
-                    <tr>
-                      <td>Exposure</td>
-                      <td>₹ 0.00</td>
-                    </tr>
-                    <tr>
-                      <td>Options Premium</td>
-                      <td>₹ 0.00</td>
-                    </tr>
-                    <tr>
-                      <th className="pt-4">Collateral (Liquid funds)</th>
-                      <th className="pt-4">₹ 0.00</th>
-                    </tr>
-                    <tr>
-                      <td>Collateral (Equity)</td>
-                      <td>₹ 0.00</td>
-                    </tr>
-                    <tr>
-                      <td>Total Collateral</td>
-                      <td>₹ 0.00</td>
-                    </tr>
+                    {breakdown.map((item, index) => (
+                      <tr key={index}>
+                        {item.isHeader ? (
+                          <>
+                            <th className="pt-4">{item.label}</th>
+                            <th className="pt-4">₹ {item.value.toFixed(2)}</th>
+                          </>
+                        ) : (
+                          <>
+                            <td>{item.label}</td>
+                            <td>₹ {item.value.toFixed(2)}</td>
+                          </>
+                        )}
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
