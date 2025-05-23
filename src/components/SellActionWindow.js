@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import GeneralContext from "./GeneralContext";
-import "./BuyActionWindow.css";
+import "./BuyActionWindow.css"; // reuse styles from buy window
 
-const BuyActionWindow = ({ uid }) => {
+const SellActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
   const [orderHistory, setOrderHistory] = useState([]);
@@ -14,23 +14,24 @@ const BuyActionWindow = ({ uid }) => {
     setOrderHistory(storedOrders);
   }, []);
 
-  const handleBuyClick = () => {
+  const handleSellClick = () => {
     const newOrder = {
       name: uid,
       qty: Number(stockQuantity),
       price: Number(stockPrice),
       mode: "SELL",
+      time: new Date().toISOString()
     };
 
     const updatedOrders = [...orderHistory, newOrder];
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
     setOrderHistory(updatedOrders);
 
-    GeneralContext.closeBuyWindow();
+    GeneralContext.closeSellWindow(); // Make sure this is defined in your context
   };
 
   const handleCancelClick = () => {
-    GeneralContext.closeBuyWindow();
+    GeneralContext.closeSellWindow();
   };
 
   return (
@@ -62,9 +63,9 @@ const BuyActionWindow = ({ uid }) => {
       </div>
 
       <div className="buttons">
-        <span>Margin required ₹{(stockQuantity * stockPrice).toFixed(2)}</span>
+        <span>Margin to receive ₹{(stockQuantity * stockPrice).toFixed(2)}</span>
         <div>
-          <Link className="btn btn-blue" onClick={handleBuyClick}>
+          <Link className="btn btn-blue" onClick={handleSellClick}>
             Sell
           </Link>
           <Link to="" className="btn btn-grey" onClick={handleCancelClick}>
@@ -76,4 +77,4 @@ const BuyActionWindow = ({ uid }) => {
   );
 };
 
-export default SellActionWindow.js;
+export default SellActionWindow;
