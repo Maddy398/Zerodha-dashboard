@@ -1,23 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import axios from "axios";
-
 import GeneralContext from "./GeneralContext";
-
 import "./BuyActionWindow.css";
 
 const BuyActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
+  const [orderHistory, setOrderHistory] = useState([]);
+
+  useEffect(() => {
+    const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+    setOrderHistory(storedOrders);
+  }, []);
 
   const handleBuyClick = () => {
-    axios.post("https://zerodha-backend-0zxr.onrender.com/newOrder", {
+    const newOrder = {
       name: uid,
-      qty: stockQuantity,
-      price: stockPrice,
+      qty: Number(stockQuantity),
+      price: Number(stockPrice),
       mode: "BUY",
-    });
+      timestamp: new Date().toISOString(),
+    };
+
+    const updatedOrders = [...orderHistory, newOrder];
+    localStorage.setItem("orders", JSON.stringify(updatedOrders));
+    setOrderHistory(updatedOrders);
 
     GeneralContext.closeBuyWindow();
   };
@@ -55,7 +63,7 @@ const BuyActionWindow = ({ uid }) => {
       </div>
 
       <div className="buttons">
-        <span>Margin required ₹140.65</span>
+        <span>Margin required ₹{(stockQuantity * stockPrice).toFixed(2)}</span>
         <div>
           <Link className="btn btn-blue" onClick={handleBuyClick}>
             Buy
@@ -64,6 +72,17 @@ const BuyActionWindow = ({ uid }) => {
             Cancel
           </Link>
         </div>
+      </div>
+
+      <div className="order-history">
+        <h4>Order History</h4>
+        <ul>
+          {orderHistory.map((order, idx) => (
+            <li key={idx}>
+              {order.mode} {order.qty} @ ₹{order.price} ({order.timestamp})
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
