@@ -132,7 +132,7 @@ const Positions = () => {
       </div>
 
       {/* Render combined vertical graph */}
-      <VerticalGraph data={data} />
+      <pograph data={data} />
     </>
   );
 };
