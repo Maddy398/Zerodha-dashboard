@@ -77,7 +77,7 @@ export const options = {
   },
 };
 
-export function pograph({ data }) {
+export function Pograph({ data }) {
   return (
     <div style={{ height: "400px", width: "100%", padding: "2rem 0" }}>
       <Chart type="bar" options={options} data={data} />
