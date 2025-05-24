@@ -95,7 +95,7 @@ const Positions = () => {
                     <td className={profClass}>
                       {(curValue - stock.avg * stock.qty).toFixed(2)}
                     </td>
-                    <td >{stock.dayChange}%</td>
+                    <td className={profClass} >{stock.dayChange}%</td>
                   </tr>
                 );
               })
