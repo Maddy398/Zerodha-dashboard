@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./BuyActionWindow.css"; // Reuse your styles
 
 const TradeActionWindow = ({ uid, mode: initialMode, onClose }) => {
-  const [mode, setMode] = useState(initialMode || "BUY"); // "BUY" or "SELL"
+  const [mode, setMode] = useState("BUY"); // "BUY" or "SELL"
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0);
   const [orderHistory, setOrderHistory] = useState([]);
@@ -44,9 +44,6 @@ const TradeActionWindow = ({ uid, mode: initialMode, onClose }) => {
         <button className={mode === "BUY" ? "active" : ""} onClick={() => setMode("BUY")}>
           Buy
         </button>
-        <button className={mode === "SELL" ? "active" : ""} onClick={() => setMode("SELL")}>
-          Sell
-        </button>
       </div>
 
       <div className="regular-order">
@@ -75,8 +72,7 @@ const TradeActionWindow = ({ uid, mode: initialMode, onClose }) => {
 
       <div className="buttons">
         <span>
-          Margin {mode === "BUY" ? "required" : "released"} ₹
-          {(stockQuantity * stockPrice).toFixed(2)}
+          Margin {mode === "BUY" ? "required" : "released"} ₹ {(stockQuantity * stockPrice).toFixed(2)}
         </span>
         <div>
           <button className="btn btn-blue" onClick={handleTradeClick}>
