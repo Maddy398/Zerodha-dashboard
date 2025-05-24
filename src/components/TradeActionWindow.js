@@ -2,10 +2,17 @@ import React, { useState, useEffect } from "react";
 import "./BuyActionWindow.css"; // Reuse your styles
 
 const TradeActionWindow = ({ uid, mode: initialMode, onClose }) => {
-  const [mode, setMode] = useState("BUY"); // "BUY" or "SELL"
+  const [mode, setMode] = useState(initialMode || "BUY"); // Use initialMode prop
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0);
   const [orderHistory, setOrderHistory] = useState([]);
+
+  // Sync mode if initialMode changes (optional but good UX)
+  useEffect(() => {
+    if (initialMode) {
+      setMode(initialMode);
+    }
+  }, [initialMode]);
 
   useEffect(() => {
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
@@ -22,7 +29,7 @@ const TradeActionWindow = ({ uid, mode: initialMode, onClose }) => {
       name: uid,
       qty: Number(stockQuantity),
       price: Number(stockPrice),
-      mode, // BUY or SELL
+      mode,
       timestamp: new Date().toISOString(),
     };
 
@@ -44,8 +51,12 @@ const TradeActionWindow = ({ uid, mode: initialMode, onClose }) => {
         <button className={mode === "BUY" ? "active" : ""} onClick={() => setMode("BUY")}>
           Buy
         </button>
+        <button className={mode === "SELL" ? "active" : ""} onClick={() => setMode("SELL")}>
+          Sell
+        </button>
       </div>
 
+      {/* Quantity & Price Inputs */}
       <div className="regular-order">
         <div className="inputs">
           <fieldset>
@@ -70,12 +81,13 @@ const TradeActionWindow = ({ uid, mode: initialMode, onClose }) => {
         </div>
       </div>
 
+      {/* Action Buttons */}
       <div className="buttons">
         <span>
           Margin {mode === "BUY" ? "required" : "released"} ₹ {(stockQuantity * stockPrice).toFixed(2)}
         </span>
         <div>
-          <button className="btn btn-blue" onClick={handleTradeClick}>
+          <button className={`btn ${mode === "BUY" ? "btn-blue" : "btn-red"}`} onClick={handleTradeClick}>
             {mode}
           </button>
           <button className="btn btn-grey" onClick={handleCancelClick}>
