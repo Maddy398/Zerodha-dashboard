@@ -114,7 +114,7 @@ const WatchListActions = ({ uid }) => {
         </button>
       </Tooltip>
       <Tooltip title="Sell (S)" placement="top" arrow TransitionComponent={Grow}>
-        <button className="sell">Sell</button>
+        <button className="sell onClick={handleBuyClick}">Sell</button>
       </Tooltip>
     </span>
   );
