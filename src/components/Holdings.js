@@ -7,7 +7,6 @@ const Holdings = () => {
   useEffect(() => {
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
 
-    // Aggregate buy orders only (you can adapt this logic for SELL visibility)
     const holdingsMap = {};
 
     storedOrders.forEach((order) => {
@@ -21,34 +20,38 @@ const Holdings = () => {
           qty: 0,
           totalCost: 0,
           price: price, // latest price assumed
-          net: "+0.00",
-          day: "+0.00",
-          isLoss: false,
+          lastPrice: price,
         };
       }
 
       if (order.mode === "BUY") {
         holdingsMap[name].qty += qty;
         holdingsMap[name].totalCost += qty * price;
-        holdingsMap[name].price = price; // update latest price
+        holdingsMap[name].lastPrice = price;
       } else if (order.mode === "SELL") {
         holdingsMap[name].qty -= qty;
-        holdingsMap[name].totalCost -= qty * price;
-        holdingsMap[name].price = price;
+        // totalCost should NOT be reduced here because cost basis stays the same for remaining stocks
+        holdingsMap[name].lastPrice = price;
       }
     });
 
+    // Filter stocks with positive quantity
     const formattedHoldings = Object.values(holdingsMap)
       .filter((h) => h.qty > 0)
-      .map((h) => ({
-        name: h.name,
-        qty: h.qty,
-        avg: h.totalCost / h.qty,
-        price: h.price,
-        net: "+0.00", // Placeholder
-        day: "+0.00", // Placeholder
-        isLoss: h.price < h.totalCost / h.qty,
-      }));
+      .map((h) => {
+        const avgCost = h.totalCost / h.qty;
+        const isLoss = h.lastPrice < avgCost;
+
+        return {
+          name: h.name,
+          qty: h.qty,
+          avg: avgCost,
+          price: h.lastPrice,
+          net: "+0.00", // You can add your net change calculation here
+          day: "+0.00", // You can add your daily change calculation here
+          isLoss,
+        };
+      });
 
     setAllHoldings(formattedHoldings);
   }, []);
@@ -64,16 +67,35 @@ const Holdings = () => {
   );
 
   const totalPL = currentValue - totalInvestment;
-  const totalPLPercent = ((totalPL / totalInvestment) * 100).toFixed(2);
+  const totalPLPercent = totalInvestment
+    ? ((totalPL / totalInvestment) * 100).toFixed(2)
+    : "0.00";
 
   const labels = allHoldings.map((stock) => stock.name);
   const data = {
     labels,
     datasets: [
       {
-        label: "Stock Price",
+        label: "LTP (Last Traded Price)",
         data: allHoldings.map((stock) => stock.price),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        fill: true,
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        type: "line",
+      },
+      {
+        label: "Avg. Cost",
+        data: allHoldings.map((stock) => stock.avg),
+        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        fill: true,
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        type: "line",
       },
     ],
   };
@@ -100,7 +122,8 @@ const Holdings = () => {
           <tbody>
             {allHoldings.map((stock, index) => {
               const curValue = stock.price * stock.qty;
-              const isProfit = curValue - stock.avg * stock.qty >= 0.0;
+              const pl = curValue - stock.avg * stock.qty;
+              const isProfit = pl >= 0;
               const profClass = isProfit ? "profit" : "loss";
               const dayClass = stock.isLoss ? "loss" : "profit";
 
@@ -111,9 +134,7 @@ const Holdings = () => {
                   <td>{stock.avg.toFixed(2)}</td>
                   <td>{stock.price.toFixed(2)}</td>
                   <td>{curValue.toFixed(2)}</td>
-                  <td className={profClass}>
-                    {(curValue - stock.avg * stock.qty).toFixed(2)}
-                  </td>
+                  <td className={profClass}>{pl.toFixed(2)}</td>
                   <td className={profClass}>{stock.net}</td>
                   <td className={dayClass}>{stock.day}</td>
                 </tr>
@@ -152,4 +173,3 @@ const Holdings = () => {
 };
 
 export default Holdings;
-
