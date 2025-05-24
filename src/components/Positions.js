@@ -12,7 +12,6 @@ import {
 } from "chart.js";
 import { Chart } from "react-chartjs-2";
 
-// Register chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,8 +28,8 @@ const Positions = () => {
 
   useEffect(() => {
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
-    const map = {};
 
+    const map = {};
     storedOrders.forEach((order) => {
       const name = order.name;
       const qty = Number(order.qty);
@@ -73,10 +72,11 @@ const Positions = () => {
       };
     });
 
+    console.log("Final Positions:", finalPositions);
     setPositions(finalPositions);
   }, []);
 
-  // Prepare chart data and options
+  // Chart data
   const labels = positions.map((p) => p.name);
 
   const data = {
@@ -114,50 +114,22 @@ const Positions = () => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // let container height control chart height
-    interaction: {
-      mode: "index",
-      intersect: false,
-    },
+    maintainAspectRatio: false,
+    interaction: { mode: "index", intersect: false },
     stacked: false,
     plugins: {
-      legend: {
-        position: "bottom",
-        labels: {
-          font: { size: 14 },
-        },
-      },
-      title: {
-        display: true,
-        text: "Positions Overview",
-        font: { size: 20, weight: "bold" },
-      },
+      legend: { position: "bottom" },
+      title: { display: true, text: "Positions Overview" },
     },
     scales: {
-      y: {
-        type: "linear",
-        display: true,
-        position: "left",
-        title: {
-          display: true,
-          text: "Quantity",
-        },
-      },
+      y: { type: "linear", position: "left", title: { display: true, text: "Quantity" } },
       y1: {
         type: "linear",
-        display: true,
         position: "right",
-        grid: {
-          drawOnChartArea: false, // only draw grid for y axis, not y1
-        },
-        title: {
-          display: true,
-          text: "Price (₹)",
-        },
+        grid: { drawOnChartArea: false },
+        title: { display: true, text: "Price (₹)" },
       },
-      x: {
-        ticks: { maxRotation: 45, minRotation: 45 },
-      },
+      x: { ticks: { maxRotation: 45, minRotation: 45 } },
     },
   };
 
@@ -201,9 +173,21 @@ const Positions = () => {
         </table>
       </div>
 
-      {/* Chart container with fixed height */}
-      <div style={{ height: "400px", width: "100%", marginTop: "2rem" }}>
-        <Chart data={data} options={options} />
+      <div
+        style={{
+          height: "450px",
+          width: "100%",
+          border: "1px solid #ccc",
+          marginTop: "2rem",
+          padding: "1rem",
+          boxSizing: "border-box",
+        }}
+      >
+        {positions.length > 0 ? (
+          <Chart data={data} options={options} />
+        ) : (
+          <p>No positions to display chart</p>
+        )}
       </div>
     </>
   );
