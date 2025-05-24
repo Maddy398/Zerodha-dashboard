@@ -1,84 +1,97 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Funds = () => {
-  // In a real app, these values would come from props, context, or an API
-  const summary = {
-    availableMargin: 4043,
-    usedMargin: 3757,
-    availableCash: 4043,
-  };
+  const [fundsData, setFundsData] = useState({});
 
-  const breakdown = [
-    { label: "Opening Balance", value: 4043.10 },
-    { label: "Opening Balance (F&O)", value: 3736.40 },
-    { label: "Payin", value: 4064.00 },
-    { label: "SPAN", value: 0.00 },
-    { label: "Delivery Margin", value: 0.00 },
-    { label: "Exposure", value: 0.00 },
-    { label: "Options Premium", value: 0.00 },
-    { label: "Collateral (Liquid funds)", value: 0.00, isHeader: true },
-    { label: "Collateral (Equity)", value: 0.00 },
-    { label: "Total Collateral", value: 0.00 },
-  ];
+  useEffect(() => {
+    // Try to get funds data from localStorage
+    const storedData = localStorage.getItem("funds");
+    if (storedData) {
+      try {
+        setFundsData(JSON.parse(storedData));
+      } catch {
+        setFundsData({});
+      }
+    } else {
+      // Default fallback data
+      setFundsData({
+        availableMargin: 4043,
+        usedMargin: 3757,
+        availableCash: 4043,
+        "Opening Balance": 4043.10,
+        "Opening Balance (F&O)": 3736.40,
+        Payin: 4064.0,
+        SPAN: 0.0,
+        "Delivery Margin": 0.0,
+        Exposure: 0.0,
+        "Options Premium": 0.0,
+        "Collateral (Liquid funds)": 0.0,
+        "Collateral (Equity)": 0.0,
+        "Total Collateral": 0.0,
+      });
+    }
+  }, []);
 
   return (
     <div
-      className="container-fluid bg-light d-flex align-items-center justify-content-center"
-      style={{ minHeight: "100vh", padding: "2rem" }}
+      className="container"
+      style={{
+        maxWidth: "600px",
+        margin: "2rem auto",
+        padding: "1rem",
+        boxShadow: "0 0 12px rgba(0,0,0,0.1)",
+        borderRadius: "8px",
+        backgroundColor: "#fff",
+        fontFamily: "Arial, sans-serif",
+      }}
     >
-      <div className="card w-100 shadow-sm">
-        <div className="card-body">
-          <h2 className="card-title text-center mb-4">Equity Funds & Margins</h2>
-          <div className="row">
-            {/* Left Column: Summary */}
-            <div className="col-lg-4 mb-4">
-              <div className="bg-white p-4 rounded shadow-sm h-100 d-flex flex-column justify-content-between">
-                <h5 className="mb-3">Margin Summary</h5>
-                <div className="mb-3">
-                  <p className="mb-1 text-muted">Available Margin</p>
-                  <h4 className="text-success">₹ {summary.availableMargin}</h4>
-                </div>
-                <div className="mb-3">
-                  <p className="mb-1 text-muted">Used Margin</p>
-                  <h4 className="text-danger">₹ {summary.usedMargin}</h4>
-                </div>
-                <div className="mb-3">
-                  <p className="mb-1 text-muted">Available Cash</p>
-                  <h4 className="text-success">₹ {summary.availableCash}</h4>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Table */}
-            <div className="col-lg-8">
-              <div className="table-responsive bg-white rounded shadow-sm">
-                <table className="table mb-0">
-                  <tbody>
-                    {breakdown.map((item, index) => (
-                      <tr key={index}>
-                        {item.isHeader ? (
-                          <>
-                            <th className="pt-4">{item.label}</th>
-                            <th className="pt-4">₹{item.value}</th>
-                          </>
-                        ) : (
-                          <>
-                            <td>{item.label}</td>
-                            <td>₹{item.value}</td>
-                          </>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
+        Equity Funds & Margins
+      </h2>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          fontSize: "1rem",
+        }}
+      >
+        <tbody>
+          {Object.entries(fundsData).map(([key, value]) => (
+            <tr
+              key={key}
+              style={{
+                borderBottom: "1px solid #ddd",
+                backgroundColor:
+                  key.toLowerCase().includes("collateral") ? "#f9f9f9" : "white",
+              }}
+            >
+              <td
+                style={{
+                  padding: "12px 8px",
+                  fontWeight: key.toLowerCase().includes("collateral")
+                    ? "600"
+                    : "400",
+                }}
+              >
+                {key}
+              </td>
+              <td
+                style={{
+                  padding: "12px 8px",
+                  textAlign: "right",
+                  fontWeight: key.toLowerCase().includes("collateral")
+                    ? "600"
+                    : "400",
+                }}
+              >
+                ₹ {Number(value).toFixed(2)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
 
 export default Funds;
-
