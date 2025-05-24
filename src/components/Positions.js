@@ -1,55 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Chart } from "react-chartjs-2";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const options = {
-  responsive: true,
-  plugins: {
-    legend: { position: "bottom" },
-    title: {
-      display: true,
-      text: "Positions Overview (Quantity & Avg Price)",
-    },
-  },
-  scales: {
-    y: {
-      type: "linear",
-      position: "left",
-      ticks: { color: "#333" },
-      title: { display: true, text: "Quantity" },
-      grid: { drawOnChartArea: false },
-    },
-    y1: {
-      type: "linear",
-      position: "right",
-      ticks: { color: "#555" },
-      title: { display: true, text: "Avg Price" },
-      grid: { drawOnChartArea: false },
-    },
-  },
-};
-
 const Positions = () => {
   const [positions, setPositions] = useState([]);
 
@@ -108,30 +57,7 @@ const Positions = () => {
     setPositions(finalPositions);
   }, []);
 
-  // Prepare chart data
-  const labels = positions.map((p) => p.name);
-  const data = {
-    labels,
-    datasets: [
-      {
-        type: "bar",
-        label: "Quantity",
-        data: positions.map((p) => p.qty),
-        backgroundColor: "rgba(75, 192, 192, 0.5)",
-        yAxisID: "y",
-      },
-      {
-        type: "line",
-        label: "Avg Price",
-        data: positions.map((p) => p.avg.toFixed(2)),
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 2,
-        fill: false,
-        yAxisID: "y1",
-        tension: 0.2,
-      },
-    ],
-  };
+
 
   return (
     <>
@@ -175,9 +101,7 @@ const Positions = () => {
         </table>
       </div>
 
-      <div style={{ height: "400px", marginTop: "2rem" }}>
-        <Chart options={options} data={data} />
-      </div>
+
     </>
   );
 };
