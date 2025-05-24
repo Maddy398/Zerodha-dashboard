@@ -11,7 +11,7 @@ export const GeneralContextProvider = ({ children }) => {
   const [selectedStockUID, setSelectedStockUID] = useState("");
   const [tradeMode, setTradeMode] = useState("BUY"); // "BUY" or "SELL"
 
-  const openTradeWindow = (uid, mode = "BUY") => {
+  const openTradeWindow = (uid, mode = "BUY"||"SELL") => {
     setSelectedStockUID(uid);
     setTradeMode(mode);
     setIsTradeWindowOpen(true);
