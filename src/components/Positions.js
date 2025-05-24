@@ -1,5 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Pograph } from "./Postiongraph";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Chart } from "react-chartjs-2";
+
+// Register chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const Positions = () => {
   const [positions, setPositions] = useState([]);
@@ -21,8 +44,6 @@ const Positions = () => {
           totalCost: 0,
           latestPrice: price,
           previousClose: price,
-          dayChange: 0,
-          isLoss: false,
         };
       }
 
@@ -55,8 +76,9 @@ const Positions = () => {
     setPositions(finalPositions);
   }, []);
 
-  // Prepare combined chart data
+  // Prepare chart data and options
   const labels = positions.map((p) => p.name);
+
   const data = {
     labels,
     datasets: [
@@ -70,18 +92,17 @@ const Positions = () => {
       {
         type: "line",
         label: "Avg Price",
-        data: positions.map((p) => p.avg.toFixed(2)),
+        data: positions.map((p) => +p.avg.toFixed(2)),
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 2,
         fill: false,
         yAxisID: "y1",
         tension: 0.3,
       },
-      // Optionally, you can add Latest Price as another dataset
       {
         type: "line",
         label: "Latest Price",
-        data: positions.map((p) => p.price.toFixed(2)),
+        data: positions.map((p) => +p.price.toFixed(2)),
         borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 2,
         fill: false,
@@ -89,6 +110,55 @@ const Positions = () => {
         tension: 0.3,
       },
     ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false, // let container height control chart height
+    interaction: {
+      mode: "index",
+      intersect: false,
+    },
+    stacked: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          font: { size: 14 },
+        },
+      },
+      title: {
+        display: true,
+        text: "Positions Overview",
+        font: { size: 20, weight: "bold" },
+      },
+    },
+    scales: {
+      y: {
+        type: "linear",
+        display: true,
+        position: "left",
+        title: {
+          display: true,
+          text: "Quantity",
+        },
+      },
+      y1: {
+        type: "linear",
+        display: true,
+        position: "right",
+        grid: {
+          drawOnChartArea: false, // only draw grid for y axis, not y1
+        },
+        title: {
+          display: true,
+          text: "Price (₹)",
+        },
+      },
+      x: {
+        ticks: { maxRotation: 45, minRotation: 45 },
+      },
+    },
   };
 
   return (
@@ -131,8 +201,10 @@ const Positions = () => {
         </table>
       </div>
 
-      {/* Render combined vertical graph */}
-      <Pograph data={data} />
+      {/* Chart container with fixed height */}
+      <div style={{ height: "400px", width: "100%", marginTop: "2rem" }}>
+        <Chart data={data} options={options} />
+      </div>
     </>
   );
 };
