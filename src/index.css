@@ -11,6 +11,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.profit {
+  color: green;
+}
+
+.loss {
+  color: red;
+}
+
+.order-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-table th,
+.order-table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
 
 .dashboard-container {
   width: 100%;
@@ -842,13 +861,6 @@ hr {
   background-color: rgb(212, 212, 212);
 }
 
-.profit {
-  color: green;
-}
-
-.loss {
-  color: red;
-}
 
 
 
