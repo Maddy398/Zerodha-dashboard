@@ -850,17 +850,7 @@ hr {
   color: red;
 }
 
-.order-table table {
-  width: 100%;
-  border-collapse: collapse;
-}
 
-.order-table th,
-.order-table td {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  text-align: center;
-}
 
 
 
