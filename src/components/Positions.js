@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { pograph } from "./VerticalGraph";
+import { pograph } from "./postiongraph";
 
 const Positions = () => {
   const [positions, setPositions] = useState([]);
