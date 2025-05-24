@@ -1,18 +1,29 @@
-
-
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
+  LineController,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+// Register the necessary components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  LineController,
+  Title,
+  Tooltip,
+  Legend
+);
 
+// Chart options
 export const options = {
   responsive: true,
   maintainAspectRatio: false,
@@ -78,10 +89,11 @@ export const options = {
   },
 };
 
+// Component that renders the Line chart
 export function VerticalGraph({ data }) {
   return (
     <div style={{ height: "400px", width: "100%", padding: "2rem 0" }}>
-      <Bar options={options} data={data} />
+      <Line options={options} data={data} />
     </div>
   );
 }
