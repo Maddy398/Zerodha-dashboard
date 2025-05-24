@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { pograph } from "./postiongraph";
+import { Pograph } from "./Postiongraph";
 
 const Positions = () => {
   const [positions, setPositions] = useState([]);
@@ -132,7 +132,7 @@ const Positions = () => {
       </div>
 
       {/* Render combined vertical graph */}
-      <pograph data={data} />
+      <Pograph data={data} />
     </>
   );
 };
